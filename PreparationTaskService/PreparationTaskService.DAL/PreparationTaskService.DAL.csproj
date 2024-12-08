@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\backup\**" />
+      <EmbeddedResource Remove="Migrations\backup\**" />
+      <None Remove="Migrations\backup\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\20241207090228_Init.cs" />
+      <Compile Remove="Migrations\20241207090228_Init.Designer.cs" />
+      <Compile Remove="Migrations\20241207114955_Init.cs" />
+      <Compile Remove="Migrations\20241207114955_Init.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!--<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />-->
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">        
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PreparationTaskService.DAL.Entities\PreparationTaskService.DAL.Entities.csproj" />
+      <ProjectReference Include="..\PreparationTaskService.DAL.PostgreSql\PreparationTaskService.DAL.PostgreSql.csproj" />
+    </ItemGroup>
+  
+</Project>

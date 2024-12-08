@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+ 
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-PreparationTaskService-85c9a772-2112-40cc-9e99-2efa01b03631</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+ 
+    <ItemGroup>
+      <Compile Remove="Worker.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PreparationTaskService.DAL.Entities\PreparationTaskService.DAL.Entities.csproj" />
+      <ProjectReference Include="..\PreparationTaskService.DAL.PostgreSql\PreparationTaskService.DAL.PostgreSql.csproj" />
+      <ProjectReference Include="..\PreparationTaskService.DAL\PreparationTaskService.DAL.csproj" />
+      <ProjectReference Include="..\PreparationTaskService.DataTransfer\PreparationTaskService.DataTransfer.csproj" />
+    </ItemGroup>
+</Project>

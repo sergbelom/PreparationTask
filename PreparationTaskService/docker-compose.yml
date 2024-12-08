@@ -1,0 +1,6 @@
+﻿services:
+  preparationtaskservice:
+    image: preparationtaskservice
+    build:
+      context: .
+      dockerfile: PreparationTaskService/Dockerfile
