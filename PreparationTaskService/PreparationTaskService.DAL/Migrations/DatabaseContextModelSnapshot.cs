@@ -10,7 +10,7 @@ using PreparationTaskService.DAL;
 
 namespace PreparationTaskService.DAL.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
+    [DbContext(typeof(PrepTaskDatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

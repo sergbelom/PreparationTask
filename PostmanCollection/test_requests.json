@@ -1,0 +1,124 @@
+{
+    "StreetCreateRequest": {
+        "Name": "test street 1",
+        "Points": [
+            {
+                "X": 0.00,
+                "Y": 0.00
+            },
+            {
+                "X": 2.00,
+                "Y": 1.00
+            },
+            {
+                "X": 4.00,
+                "Y": 1.00
+            },
+            {
+                "X": 6.00,
+                "Y": 1.50
+            }
+        ],
+        "Capacity": 10
+    }
+}
+
+{
+    "StreetCreateRequest": {
+        "Name": "test street 2",
+        "Points": [
+            {
+                "X": 2.00,
+                "Y": 1.00
+            },
+            {
+                "X": 2.00,
+                "Y": 3.00
+            },
+            {
+                "X": 2.0,
+                "Y": 4.50
+            }
+        ],
+        "Capacity": 5
+    }
+}
+
+{
+    "StreetCreateRequest": {
+        "Name": "test street 3",
+        "Points": [
+            {
+                "X": 0.50,
+                "Y": 2.00
+            },
+            {
+                "X": 2.00,
+                "Y": 3.00
+            },
+            {
+                "X": 3.0,
+                "Y": 4.0
+            },
+            {
+                "X": 4.0,
+                "Y": 4.0
+            },
+            {
+                "X": 6.0,
+                "Y": 5.0
+            }
+        ],
+        "Capacity": 10
+    }
+}
+
+{
+    "StreetCreateRequest": {
+        "Name": "test street 4",
+        "Points": [
+            {
+                "X": 4.00,
+                "Y": 1.00
+            },
+            {
+                "X": 4.50,
+                "Y": 2.50
+            },
+            {
+                "X": 4.0,
+                "Y": 4.0
+            },
+            {
+                "X": 3.5,
+                "Y": 5.0
+            },
+        ],
+        "Capacity": 5
+    }
+}
+
+{
+    "StreetCreateRequest": {
+        "Name": "test street 5",
+        "Points": [
+            {
+                "X": 2.00,
+                "Y": 4.50
+            },
+            {
+                "X": 0.00,
+                "Y": 3.00
+            },
+            {
+                "X": 6.0,
+                "Y": 6.0
+            },
+            {
+                "X": 3.5,
+                "Y": 5.0
+            },
+        ],
+        "Capacity": 10
+    }
+}

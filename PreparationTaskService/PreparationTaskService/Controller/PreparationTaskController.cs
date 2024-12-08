@@ -6,7 +6,6 @@ using static PreparationTaskService.Common.Statics;
 namespace PreparationTaskService.Controller
 {
     [ApiController]
-    //[Route("[controller]")]
     [Produces("application/json")]
     public class PreparationTaskController : Microsoft.AspNetCore.Mvc.Controller
     {

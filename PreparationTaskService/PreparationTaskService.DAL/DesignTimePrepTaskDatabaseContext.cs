@@ -5,11 +5,11 @@ using PreparationTaskService.DAL.MigrationSqlGenerator;
 
 namespace PreparationTaskService.DAL
 {
-    public class DesignTimeDatabaseContext : IDesignTimeDbContextFactory<DatabaseContext>
+    public class DesignTimePrepTaskDatabaseContext : IDesignTimeDbContextFactory<PrepTaskDatabaseContext>
     {
-        public DatabaseContext CreateDbContext(string[] args)
+        public PrepTaskDatabaseContext CreateDbContext(string[] args)
         {
-            var builder = new DbContextOptionsBuilder<DatabaseContext>();
+            var builder = new DbContextOptionsBuilder<PrepTaskDatabaseContext>();
             builder.UseNpgsql("Server=localhost;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres",          //Integrated Sequrity=True
                 x =>
                 {
@@ -18,7 +18,7 @@ namespace PreparationTaskService.DAL
                 })
                 .ReplaceService<IMigrationsSqlGenerator, PrepMigrationSqlGenerator>();
 
-            return new DatabaseContext(builder.Options);
+            return new PrepTaskDatabaseContext(builder.Options);
         }
     }
 }

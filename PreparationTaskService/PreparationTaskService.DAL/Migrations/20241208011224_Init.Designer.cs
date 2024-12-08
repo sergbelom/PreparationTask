@@ -11,7 +11,7 @@ using PreparationTaskService.DAL;
 
 namespace PreparationTaskService.DAL.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
+    [DbContext(typeof(PrepTaskDatabaseContext))]
     [Migration("20241208011224_Init")]
     partial class Init
     {

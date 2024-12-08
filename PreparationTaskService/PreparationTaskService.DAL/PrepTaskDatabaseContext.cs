@@ -3,7 +3,7 @@ using PreparationTaskService.DAL.Entities;
 
 namespace PreparationTaskService.DAL
 {
-    public class DatabaseContext : DbContext
+    public class PrepTaskDatabaseContext : DbContext
     {
         /// <summary>
         /// Mapping for the STREETS table
@@ -11,7 +11,7 @@ namespace PreparationTaskService.DAL
         public DbSet<StreetEntity> StreetsDbSet { get; set; }
         public IQueryable<StreetEntity> Streets { get { return StreetsDbSet.AsQueryable(); } }
 
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        public PrepTaskDatabaseContext(DbContextOptions<PrepTaskDatabaseContext> options) : base(options)
         {
 
         }
