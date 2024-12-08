@@ -36,7 +36,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PreparationTaskService.DAL.Entities\PreparationTaskService.DAL.Entities.csproj" />
-      <ProjectReference Include="..\PreparationTaskService.DAL.PostgreSql\PreparationTaskService.DAL.PostgreSql.csproj" />
     </ItemGroup>
   
 </Project>
