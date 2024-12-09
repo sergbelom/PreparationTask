@@ -1,6 +1,5 @@
 ﻿using NetTopologySuite.Geometries;
 using PreparationTaskService.DAL.Entities;
-using PreparationTaskService.DataTransfer.Streets.Models;
 
 namespace PreparationTaskService.Services
 {
@@ -54,5 +53,13 @@ namespace PreparationTaskService.Services
         /// <param name="newStreetPoint"></param>
         /// <returns></returns>
         Task<bool> AddNewPointAsync(int streetId, Coordinate[] newPoints);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="streetId"></param>
+        /// <param name="newPoint"></param>
+        /// <returns></returns>
+        Task<bool> AddNewPointViaSqlScriptAsync(int streetId, Coordinate newPoint);
     }
 }

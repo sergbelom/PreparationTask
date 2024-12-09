@@ -1,7 +1,9 @@
 ﻿using NetTopologySuite.Geometries;
+using PreparationTaskService.DAL.Entities;
 using PreparationTaskService.DataTransfer.Streets;
 using PreparationTaskService.DataTransfer.Streets.Models;
-using Messages = PreparationTaskService.Common.StaticMessages;
+using static PreparationTaskService.Common.StaticMessages;
+using static PreparationTaskService.Common.Statics;
 
 namespace PreparationTaskService.Services
 {
@@ -9,11 +11,13 @@ namespace PreparationTaskService.Services
     {
         private readonly ILogger<StreetService> _logger;
         private readonly IStreetServiceDb _serviceDb;
+        private readonly IConfiguration _configuration;
 
-        public StreetService(ILogger<StreetService> logger, IStreetServiceDb serviceDb)
+        public StreetService(ILogger<StreetService> logger, IStreetServiceDb serviceDb, IConfiguration configuration)
         {
             _logger = logger;
             _serviceDb = serviceDb;
+            _configuration = configuration;
         }
 
         public async Task<StreetResponseDto> FetchAndProcessingStreetCreationAsync(StreetCreateRequestDto request)
@@ -21,16 +25,16 @@ namespace PreparationTaskService.Services
             var street = await _serviceDb.ReadStreetAsync(request.Name);
             if (street != null)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = Messages.STREET_ALREADY_EXISTING };
+                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_ALREADY_EXISTING };
             }
             if (null == request.Points || request.Points.Count == 0)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = Messages.STREET_DOES_NOT_CONTAIN_POINTS };
+                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_DOES_NOT_CONTAIN_POINTS };
             }
             var result = await _serviceDb.CreateStreetAsync(request.Name, Map(request.Points), request.Capacity);
             if (result)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Success, Message = Messages.STREET_CREATED };
+                return new StreetResponseDto() { State = StreetOperationStates.Success, Message = STREET_CREATED };
             }
             return new StreetResponseDto() { State = StreetOperationStates.Error };
         }
@@ -40,12 +44,12 @@ namespace PreparationTaskService.Services
             var street = await _serviceDb.ReadStreetAsync(request.Name);
             if (null == street)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = Messages.STREET_NOT_EXISTING };
+                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_NOT_EXISTING };
             }
             var result = await _serviceDb.DeleteStreetAsync(street);
             if (result)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Success, Message = Messages.STREET_REMOVED };
+                return new StreetResponseDto() { State = StreetOperationStates.Success, Message = STREET_REMOVED };
             }
             return new StreetResponseDto() { State = StreetOperationStates.Error };
         }
@@ -58,11 +62,10 @@ namespace PreparationTaskService.Services
                 var newPoint = new Coordinate(streetAddPointRequest.NewPoint.X, streetAddPointRequest.NewPoint.Y);
                 if (!street.Geometry.IsCoordinate(newPoint))
                 {
-                    var newPoints = StreetComputingUtility.CalculateNewPoints(street.Geometry, newPoint);
-                    var result = await _serviceDb.AddNewPointAsync(street.Id, newPoints.ToArray());
+                    var result = await AddNewPointAsync(street, newPoint);
                     if (result)
                     {
-                        return new StreetResponseDto() { State = StreetOperationStates.Success, Message = Messages.NEW_POINT_ADDED };
+                        return new StreetResponseDto() { State = StreetOperationStates.Success, Message = NEW_POINT_ADDED };
                     }
                     else
                     {
@@ -71,12 +74,26 @@ namespace PreparationTaskService.Services
                 }
                 else
                 {
-                    return new StreetResponseDto() { State = StreetOperationStates.Error, Message = Messages.POINT_ALREADY_EXISTING };
+                    return new StreetResponseDto() { State = StreetOperationStates.Error, Message = POINT_ALREADY_EXISTING };
                 }
             }
             else
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = Messages.STREET_NOT_EXISTING };
+                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_NOT_EXISTING };
+            }
+        }
+
+        private async Task<bool> AddNewPointAsync(StreetEntity street, Coordinate newPoint)
+        {
+            bool isSqlScript = _configuration.GetValue<bool>(USE_POSTGIS_FEATURE);
+            if (isSqlScript)
+            {
+                return await _serviceDb.AddNewPointViaSqlScriptAsync(street.Id, newPoint);
+            }
+            else
+            {
+                var newPoints = StreetComputingUtility.CalculateNewPoints(street.Geometry, newPoint);
+                return await _serviceDb.AddNewPointAsync(street.Id, newPoints.ToArray());
             }
         }
 

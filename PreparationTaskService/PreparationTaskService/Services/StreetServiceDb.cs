@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+using Npgsql;
 using PreparationTaskService.DAL;
 using PreparationTaskService.DAL.Entities;
-using PreparationTaskService.DataTransfer.Streets.Models;
-using System.Collections.Generic;
 
 namespace PreparationTaskService.Services
 {
@@ -23,15 +22,15 @@ namespace PreparationTaskService.Services
             bool result = false;
             try
             {
-                using (var database = await _dbFactory.CreateDbContextAsync())
+                using (var dbContext = await _dbFactory.CreateDbContextAsync())
                 {
-                    database.StreetsDbSet.Add(new StreetEntity()
+                    dbContext.StreetsDbSet.Add(new StreetEntity()
                     {
                         Name = name,
                         Geometry = lineString,
                         Capacity = capacity
                     });
-                    await database.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
                 }
                 result = true;
             }
@@ -47,9 +46,9 @@ namespace PreparationTaskService.Services
             List<StreetEntity> resultStreets = null;
             try
             {
-                using (var database = await _dbFactory.CreateDbContextAsync())
+                using (var dbContext = await _dbFactory.CreateDbContextAsync())
                 {
-                    resultStreets = await database.StreetsDbSet.Where(s => s.Name == streetName).ToListAsync();
+                    resultStreets = await dbContext.StreetsDbSet.Where(s => s.Name == streetName).ToListAsync();
                 }
             }
             catch (Exception ex)
@@ -64,9 +63,9 @@ namespace PreparationTaskService.Services
             StreetEntity resultStreet = null;
             try
             {
-                using (var database = await _dbFactory.CreateDbContextAsync())
+                using (var dbContext = await _dbFactory.CreateDbContextAsync())
                 {
-                    resultStreet = await database.StreetsDbSet.FirstOrDefaultAsync(s => s.Name == streetName);
+                    resultStreet = await dbContext.StreetsDbSet.FirstOrDefaultAsync(s => s.Name == streetName);
                 }
             }
             catch (Exception ex)
@@ -81,10 +80,10 @@ namespace PreparationTaskService.Services
             bool result = false;
             try
             {
-                using (var database = await _dbFactory.CreateDbContextAsync())
+                using (var dbContext = await _dbFactory.CreateDbContextAsync())
                 {
-                    database.StreetsDbSet.Remove(streetEntity);
-                    await database.SaveChangesAsync();
+                    dbContext.StreetsDbSet.Remove(streetEntity);
+                    await dbContext.SaveChangesAsync();
                 }
                 result = true;
             }
@@ -100,13 +99,13 @@ namespace PreparationTaskService.Services
             bool result = false;
             try
             {
-                using (var database = await _dbFactory.CreateDbContextAsync())
+                using (var dbContext = await _dbFactory.CreateDbContextAsync())
                 {
                     foreach (var street in streetEntities)
                     {
-                        database.StreetsDbSet.Remove(street);
+                        dbContext.StreetsDbSet.Remove(street);
                     }
-                    await database.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
                 }
                 result = true;
             }
@@ -120,15 +119,52 @@ namespace PreparationTaskService.Services
         public async Task<bool> AddNewPointAsync(int streetId, Coordinate[] newPoints)
         {
             bool result = false;
-            using (var database = await _dbFactory.CreateDbContextAsync())
+            using (var dbContext = await _dbFactory.CreateDbContextAsync())
             {
-                var street = database.StreetsDbSet.FirstOrDefaultAsync(s => s.Id == streetId).Result;
+                var street = dbContext.StreetsDbSet.FirstOrDefaultAsync(s => s.Id == streetId).Result;
                 if (street != null)
                 {
                     street.Geometry = new LineString(newPoints);
-                    await database.SaveChangesAsync();
+                    await dbContext.SaveChangesAsync();
                     result = true;
                 }
+            }
+            return result;
+        }
+
+        public async Task<bool> AddNewPointViaSqlScriptAsync(int streetId, Coordinate newPoint)
+        {
+            bool result = false;
+            var sqlParameters = new[]
+            {
+                new NpgsqlParameter("@xcoord", newPoint.X),
+                new NpgsqlParameter("@ycoord", newPoint.Y),
+                new NpgsqlParameter("@streetId", streetId)
+            };
+            var sqlQuery = @"
+                        UPDATE preptask.""STREETS""
+                        SET ""Geometry"" = CASE
+                            WHEN ST_Distance(ST_StartPoint(""Geometry""), ST_MakePoint(@xcoord, @ycoord)) <
+                                 ST_Distance(ST_EndPoint(""Geometry""), ST_MakePoint(@xcoord, @ycoord))
+                            THEN ST_AddPoint(""Geometry"", ST_MakePoint(@xcoord, @ycoord), 0)
+                            ELSE ST_AddPoint(""Geometry"", ST_MakePoint(@xcoord, @ycoord))
+                        END
+                        WHERE ""Id"" = @streetId";
+
+            try
+            {
+                using (var dbContext = await _dbFactory.CreateDbContextAsync())
+                {
+                    var executionSqlResult = await dbContext.Database.ExecuteSqlRawAsync(sqlQuery, sqlParameters);
+                    if (executionSqlResult > 0)
+                    {
+                        result = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Execute Sql error", ex);
             }
             return result;
         }

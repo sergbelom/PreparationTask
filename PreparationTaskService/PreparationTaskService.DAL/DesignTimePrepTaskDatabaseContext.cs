@@ -10,7 +10,7 @@ namespace PreparationTaskService.DAL
         public PrepTaskDatabaseContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<PrepTaskDatabaseContext>();
-            builder.UseNpgsql("Server=localhost;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres",          //Integrated Sequrity=True
+            builder.UseNpgsql("Server=localhost;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres",
                 x =>
                 {
                     x.UseNetTopologySuite();
