@@ -1,6 +1,75 @@
-﻿services:
-  preparationtaskservice:
-    image: preparationtaskservice
+services:
+  database:
+    image: postgis/postgis
+    hostname: postgres
+    ports:
+    - 5432:5432
+    networks:
+    - local-net
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - database
+    ports:
+      - 5555:80
+    networks:
+    - local-net
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+      - VIRTUAL_HOST=pgadmin.local
+      - VIRTUAL_PORT=5555
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  # migrate:
+  #   image: mcr.microsoft.com/dotnet/sdk:9.0
+  #   build:
+  #     context: .
+  #     dockerfile: PreparationTaskService.DAL/Dockerfile
+  #   depends_on:
+  #     - database
+  #   networks:
+  #     - local-net
+  #   working_dir: /app/PreparationTaskService.DAL
+  #   volumes:
+  #     - .:/app:delegated
+  #   entrypoint: >
+  #     sh -c "
+  #       until dotnet ef database update --connection \"Server=localhost;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres\"; do
+  #         echo 'Waiting for database...';
+  #         sleep 5;
+  #       done
+  #     "
+
+  preptaskservice:
+    image: preptaskservice
     build:
       context: .
       dockerfile: PreparationTaskService/Dockerfile
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+    networks:
+      - local-net
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=database;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres
+
+networks:
+  local-net:
+    name: local-net
+    driver: bridge
+
+volumes:
+  postgres-data:
+  pgadmin-data:

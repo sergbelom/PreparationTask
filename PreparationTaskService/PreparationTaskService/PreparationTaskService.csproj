@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
- 
+
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
@@ -7,10 +7,6 @@
         <UserSecretsId>dotnet-PreparationTaskService-85c9a772-2112-40cc-9e99-2efa01b03631</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
- 
-    <ItemGroup>
-      <Compile Remove="Worker.cs" />
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="13.0.1" />

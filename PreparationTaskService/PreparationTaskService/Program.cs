@@ -5,10 +5,12 @@ using PreparationTaskService.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = builder.Configuration;
+var connectionString = configuration.GetConnectionString("DefultConnection");
 
 builder.Services.AddPooledDbContextFactory<PrepTaskDatabaseContext>(options =>
 {
-    options.UseNpgsql("Server=localhost;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres", x => x.UseNetTopologySuite());
+    options.UseNpgsql(connectionString, x => x.UseNetTopologySuite());
 });
 
 builder.Services.AddControllers();
