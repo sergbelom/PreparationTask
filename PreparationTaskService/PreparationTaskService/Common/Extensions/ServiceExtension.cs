@@ -1,4 +1,5 @@
-﻿using PreparationTaskService.Services;
+﻿using PreparationTaskService.Mapper;
+using PreparationTaskService.Services;
 
 namespace PreparationTaskService.Common.Extensions
 {
@@ -8,8 +9,7 @@ namespace PreparationTaskService.Common.Extensions
         {
             services.AddSingleton<IStreetService, StreetService>();
             services.AddSingleton<IStreetServiceDb, StreetServiceDb>();
-
-            //TODO: AutoMapper
+            services.AddAutoMapper(typeof(StreetProfile));
         }
     }
 }

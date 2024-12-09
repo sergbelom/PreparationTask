@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using PreparationTaskService;
 using PreparationTaskService.Common.Extensions;
 using PreparationTaskService.DAL;
 
@@ -14,7 +13,6 @@ builder.Services.AddPooledDbContextFactory<PrepTaskDatabaseContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.RegisterServices();
-//builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
 

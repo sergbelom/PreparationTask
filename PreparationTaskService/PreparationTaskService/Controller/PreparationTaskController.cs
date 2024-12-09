@@ -28,8 +28,7 @@ namespace PreparationTaskService.Controller
             try
             {
                 var result = await _streetService.FetchAndProcessingStreetCreationAsync(requestModel.StreetCreateRequest);
-                var resp = new StreetResponseHolderDto() { StreetResponse = result };
-                return Ok(resp);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -48,8 +47,7 @@ namespace PreparationTaskService.Controller
             try
             {
                 var result = await _streetService.FetchAndProcessingStreetDeletionsAsync(requestModel.StreetDeleteRequest);
-                var resp = new StreetResponseHolderDto() { StreetResponse = result };
-                return Ok(resp);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -68,8 +66,7 @@ namespace PreparationTaskService.Controller
             try
             {
                 var result = await _streetService.FetchAndProcessingAddingNewPointAsync(requestModel.StreetAddPointRequest);
-                var resp = new StreetResponseHolderDto() { StreetResponse = result };
-                return Ok(resp);
+                return Ok(result);
             }
             catch (Exception ex)
             {

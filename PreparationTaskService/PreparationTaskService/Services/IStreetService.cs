@@ -9,20 +9,20 @@ namespace PreparationTaskService.Services
         /// </summary>
         /// <param name="streetCreateRequest"></param>
         /// <returns></returns>
-        Task<StreetResponseDto> FetchAndProcessingStreetCreationAsync(StreetCreateRequestDto streetCreateRequest);
+        Task<StreetResponseHolderDto> FetchAndProcessingStreetCreationAsync(StreetCreateRequestDto streetCreateRequest);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="streetDeleteRequest"></param>
         /// <returns></returns>
-        Task<StreetResponseDto> FetchAndProcessingStreetDeletionsAsync(StreetDeleteRequestDto streetDeleteRequest);
+        Task<StreetResponseHolderDto> FetchAndProcessingStreetDeletionsAsync(StreetDeleteRequestDto streetDeleteRequest);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="streetAddPointRequest"></param>
         /// <returns></returns>
-        Task<StreetResponseDto> FetchAndProcessingAddingNewPointAsync(StreetAddPointRequestDto streetAddPointRequest);
+        Task<StreetResponseHolderDto> FetchAndProcessingAddingNewPointAsync(StreetAddPointRequestDto streetAddPointRequest);
     }
 }

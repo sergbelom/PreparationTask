@@ -1,4 +1,5 @@
-﻿using NetTopologySuite.Geometries;
+﻿using AutoMapper;
+using NetTopologySuite.Geometries;
 using PreparationTaskService.DAL.Entities;
 using PreparationTaskService.DataTransfer.Streets;
 using PreparationTaskService.DataTransfer.Streets.Models;
@@ -12,74 +13,76 @@ namespace PreparationTaskService.Services
         private readonly ILogger<StreetService> _logger;
         private readonly IStreetServiceDb _serviceDb;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public StreetService(ILogger<StreetService> logger, IStreetServiceDb serviceDb, IConfiguration configuration)
+        public StreetService(ILogger<StreetService> logger, IStreetServiceDb serviceDb, IConfiguration configuration, IMapper mapper)
         {
             _logger = logger;
             _serviceDb = serviceDb;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
-        public async Task<StreetResponseDto> FetchAndProcessingStreetCreationAsync(StreetCreateRequestDto request)
+        public async Task<StreetResponseHolderDto> FetchAndProcessingStreetCreationAsync(StreetCreateRequestDto request)
         {
+            if (null == request.Points || request.Points.Count == 0)
+            {
+                return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error, STREET_DOES_NOT_CONTAIN_POINTS));
+            }
             var street = await _serviceDb.ReadStreetAsync(request.Name);
             if (street != null)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_ALREADY_EXISTING };
+                return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error, STREET_ALREADY_EXISTING));
             }
-            if (null == request.Points || request.Points.Count == 0)
-            {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_DOES_NOT_CONTAIN_POINTS };
-            }
-            var result = await _serviceDb.CreateStreetAsync(request.Name, Map(request.Points), request.Capacity);
+            var result = await _serviceDb.CreateStreetAsync(request.Name, _mapper.Map<LineString>(request.Points), request.Capacity);
             if (result)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Success, Message = STREET_CREATED };
+                return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Success, STREET_CREATED));
             }
-            return new StreetResponseDto() { State = StreetOperationStates.Error };
+            return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error));
         }
 
-        public async Task<StreetResponseDto> FetchAndProcessingStreetDeletionsAsync(StreetDeleteRequestDto request)
+        public async Task<StreetResponseHolderDto> FetchAndProcessingStreetDeletionsAsync(StreetDeleteRequestDto request)
         {
             var street = await _serviceDb.ReadStreetAsync(request.Name);
             if (null == street)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_NOT_EXISTING };
+                return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error, STREET_NOT_EXISTING));
             }
             var result = await _serviceDb.DeleteStreetAsync(street);
             if (result)
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Success, Message = STREET_REMOVED };
+                return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Success, STREET_REMOVED));
             }
-            return new StreetResponseDto() { State = StreetOperationStates.Error };
+            return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error));
         }
 
-        public async Task<StreetResponseDto> FetchAndProcessingAddingNewPointAsync(StreetAddPointRequestDto streetAddPointRequest)
+        public async Task<StreetResponseHolderDto> FetchAndProcessingAddingNewPointAsync(StreetAddPointRequestDto streetAddPointRequest)
         {
             var street = await _serviceDb.ReadStreetAsync(streetAddPointRequest.Name);
             if (street != null)
             {
-                var newPoint = new Coordinate(streetAddPointRequest.NewPoint.X, streetAddPointRequest.NewPoint.Y);
+                var newPoint = _mapper.Map<Coordinate>(streetAddPointRequest.NewPoint);
                 if (!street.Geometry.IsCoordinate(newPoint))
                 {
                     var result = await AddNewPointAsync(street, newPoint);
                     if (result)
                     {
-                        return new StreetResponseDto() { State = StreetOperationStates.Success, Message = NEW_POINT_ADDED };
+                        return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Success, NEW_POINT_ADDED));
                     }
                     else
                     {
-                        return new StreetResponseDto() { State = StreetOperationStates.Error };
+                        return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error));
                     }
                 }
                 else
                 {
-                    return new StreetResponseDto() { State = StreetOperationStates.Error, Message = POINT_ALREADY_EXISTING };
+                    return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error, POINT_ALREADY_EXISTING));
                 }
             }
             else
             {
-                return new StreetResponseDto() { State = StreetOperationStates.Error, Message = STREET_NOT_EXISTING };
+                return _mapper.Map<StreetResponseHolderDto>((StreetOperationStates.Error, STREET_NOT_EXISTING));
             }
         }
 
@@ -95,16 +98,6 @@ namespace PreparationTaskService.Services
                 var newPoints = StreetComputingUtility.CalculateNewPoints(street.Geometry, newPoint);
                 return await _serviceDb.AddNewPointAsync(street.Id, newPoints.ToArray());
             }
-        }
-
-        private LineString Map(IEnumerable<StreetPoint> streetPoints)
-        {
-            var coordinates = new Coordinate[streetPoints.Count()];
-            for (int i = 0; i < streetPoints.Count(); i++)
-            {
-                coordinates[i] = new Coordinate(streetPoints.ElementAt(i).X, streetPoints.ElementAt(i).Y);
-            }
-            return new LineString(coordinates);
         }
     }
 }
