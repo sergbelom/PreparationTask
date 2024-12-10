@@ -3,6 +3,7 @@ using NetTopologySuite.Geometries;
 using Npgsql;
 using PreparationTaskService.DAL;
 using PreparationTaskService.DAL.Entities;
+using PreparationTaskService.Services.Interfaces;
 
 namespace PreparationTaskService.Services
 {
@@ -41,23 +42,6 @@ namespace PreparationTaskService.Services
             return result;
         }
 
-        public async Task<List<StreetEntity>> ReadStreetsAsync(string streetName)
-        {
-            List<StreetEntity> resultStreets = null;
-            try
-            {
-                using (var dbContext = await _dbFactory.CreateDbContextAsync())
-                {
-                    resultStreets = await dbContext.StreetsDbSet.Where(s => s.Name == streetName).ToListAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("No streets found. Internal Error.", ex);
-            }
-            return resultStreets;
-        }
-
         public async Task<StreetEntity> ReadStreetAsync(string streetName)
         {
             StreetEntity resultStreet = null;
@@ -90,28 +74,6 @@ namespace PreparationTaskService.Services
             catch (Exception ex)
             {
                 _logger.LogError("StreetEntity not deleted. Internal Error.", ex);
-            }
-            return result;
-        }
-
-        public async Task<bool> DeleteStreetsAsync(IEnumerable<StreetEntity> streetEntities)
-        {
-            bool result = false;
-            try
-            {
-                using (var dbContext = await _dbFactory.CreateDbContextAsync())
-                {
-                    foreach (var street in streetEntities)
-                    {
-                        dbContext.StreetsDbSet.Remove(street);
-                    }
-                    await dbContext.SaveChangesAsync();
-                }
-                result = true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("StreetEntities not deleted. Internal Error.", ex);
             }
             return result;
         }

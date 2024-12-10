@@ -27,10 +27,10 @@ namespace PreparationTaskService.Mapper
                 }));
 
             CreateMap<StreetPoint, Coordinate>()
-                .ConstructUsing(sp => new Coordinate(sp.X, sp.Y));
+                .ConstructUsing(sp => new Coordinate(sp.Longitude, sp.Latitude));
 
             CreateMap<IEnumerable<StreetPoint>, LineString>()
-                .ConstructUsing(streetPoints => new LineString(streetPoints.Select(sp => new Coordinate(sp.X, sp.Y)).ToArray()));
+                .ConstructUsing(streetPoints => new LineString(streetPoints.Select(sp => new Coordinate(sp.Longitude, sp.Latitude)).ToArray()));
 
         }
     }

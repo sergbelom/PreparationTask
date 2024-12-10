@@ -1,5 +1,6 @@
 ﻿using PreparationTaskService.Mapper;
 using PreparationTaskService.Services;
+using PreparationTaskService.Services.Interfaces;
 
 namespace PreparationTaskService.Common.Extensions
 {

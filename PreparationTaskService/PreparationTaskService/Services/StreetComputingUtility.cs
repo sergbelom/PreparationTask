@@ -1,5 +1,4 @@
 ﻿using NetTopologySuite.Geometries;
-using PreparationTaskService.DataTransfer.Streets.Models;
 
 namespace PreparationTaskService.Services
 {

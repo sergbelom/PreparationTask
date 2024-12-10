@@ -1,7 +1,7 @@
 ﻿using NetTopologySuite.Geometries;
 using PreparationTaskService.DAL.Entities;
 
-namespace PreparationTaskService.Services
+namespace PreparationTaskService.Services.Interfaces
 {
     /// <summary>
     /// Service to access table STREETS
@@ -26,25 +26,11 @@ namespace PreparationTaskService.Services
         Task<StreetEntity> ReadStreetAsync(string streetName);
 
         /// <summary>
-        /// Read Streets by name
-        /// </summary>
-        /// <param name="streetName"></param>
-        /// <returns></returns>
-        Task<List<StreetEntity>> ReadStreetsAsync(string streetName);
-
-        /// <summary>
         /// Delete street by StreetEntity
         /// </summary>
         /// <param name="streetEntity"></param>
         /// <returns></returns>
         Task<bool> DeleteStreetAsync(StreetEntity streetEntity);
-
-        /// <summary>
-        /// Delete Streets
-        /// </summary>
-        /// <param name="streetEntities"></param>
-        /// <returns></returns>
-        Task<bool> DeleteStreetsAsync(IEnumerable<StreetEntity> streetEntities);
 
         /// <summary>
         /// 

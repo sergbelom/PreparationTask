@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PreparationTaskService.Services;
 using PreparationTaskService.DataTransfer.Streets;
 using static PreparationTaskService.Common.Statics;
+using PreparationTaskService.Services.Interfaces;
 
 namespace PreparationTaskService.Controller
 {
@@ -32,9 +32,9 @@ namespace PreparationTaskService.Controller
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("PreparationTaskController. Error in PostStreetCreate.", ex);
             }
-            return null;
+            return BadRequest();
         }
 
         [HttpPost]
@@ -51,9 +51,9 @@ namespace PreparationTaskService.Controller
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("PreparationTaskController. Error in PostStreetDelete.", ex);
             }
-            return null;
+            return BadRequest();
         }
 
         [HttpPost]
@@ -70,9 +70,9 @@ namespace PreparationTaskService.Controller
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("PreparationTaskController. Error in PostStreetAddPoint.", ex);
             }
-            return null;
+            return BadRequest();
         }
     }
 }
