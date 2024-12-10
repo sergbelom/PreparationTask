@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"StreetCreateRequest\": {\r\n        \"Name\": \"test street 5\",\r\n        \"Points\": [\r\n            {\r\n                \"X\": 10.00,\r\n                \"Y\": 4.00\r\n            },\r\n            {\r\n                \"X\": 8.00,\r\n                \"Y\": 3.00\r\n            },\r\n            {\r\n                \"X\": 1.00,\r\n                \"Y\": 11.00\r\n            },\r\n            {\r\n                \"X\": 9.00,\r\n                \"Y\": 4.00\r\n            },\r\n            {\r\n                \"X\": 2.00,\r\n                \"Y\": 6.00\r\n            }\r\n        ],\r\n        \"Capacity\": 5\r\n    }\r\n}",
+					"raw": "{\r\n    \"StreetCreateRequest\": {\r\n        \"Name\": \"test street 2\",\r\n        \"Points\": [\r\n            {\r\n                \"Longitude\": 22.94,\r\n                \"Latitude\": 40.64\r\n            },\r\n            {\r\n                \"Longitude\": 22.95,\r\n                \"Latitude\": 40.64\r\n            }\r\n        ],\r\n        \"Capacity\": 5\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,12 +21,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:44445/street/create",
+					"raw": "http://localhost:8080/street/create",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "44445",
+					"port": "8080",
 					"path": [
 						"street",
 						"create"
@@ -42,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"StreetDeleteRequest\": {\r\n        \"Name\": \"test street 1\"\r\n    }\r\n}",
+					"raw": "{\r\n    \"StreetDeleteRequest\": {\r\n        \"Name\": \"test street 2\"\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -50,12 +50,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:44445/street/delete",
+					"raw": "http://localhost:8080/street/delete",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "44445",
+					"port": "8080",
 					"path": [
 						"street",
 						"delete"
@@ -65,13 +65,13 @@
 			"response": []
 		},
 		{
-			"name": "Add new Point",
+			"name": "Add New Point",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"StreetAddPointRequest\": {\r\n        \"Name\": \"test street 5\",\r\n        \"NewPoint\": {\r\n            \"X\": 2.00,\r\n            \"Y\": 7.00\r\n        }\r\n    }\r\n}",
+					"raw": "{\r\n    \"StreetAddPointRequest\": {\r\n        \"Name\": \"test street 2\",\r\n        \"NewPoint\": {\r\n            \"Longitude\": 22.96,\r\n            \"Latitude\": 40.65\r\n        }\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -79,12 +79,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:44445/street/addpoint",
+					"raw": "http://localhost:8080/street/addpoint",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "44445",
+					"port": "8080",
 					"path": [
 						"street",
 						"addpoint"

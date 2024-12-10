@@ -31,26 +31,6 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
-  # migrate:
-  #   image: mcr.microsoft.com/dotnet/sdk:9.0
-  #   build:
-  #     context: .
-  #     dockerfile: PreparationTaskService.DAL/Dockerfile
-  #   depends_on:
-  #     - database
-  #   networks:
-  #     - local-net
-  #   working_dir: /app/PreparationTaskService.DAL
-  #   volumes:
-  #     - .:/app:delegated
-  #   entrypoint: >
-  #     sh -c "
-  #       until dotnet ef database update --connection \"Server=localhost;Port=5432;Database=preparationtask;User Id=postgres;Password=postgres\"; do
-  #         echo 'Waiting for database...';
-  #         sleep 5;
-  #       done
-  #     "
-
   preptaskservice:
     image: preptaskservice
     build:
