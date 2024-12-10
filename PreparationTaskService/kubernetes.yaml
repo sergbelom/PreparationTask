@@ -1,0 +1,83 @@
+kind: List
+metadata: {}
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: preptask-service
+    labels:
+      app: preptask-service
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: preptask-service
+    template:
+      metadata:
+        labels:
+          app: preptask-service
+      spec:
+        containers:
+        - name: preptask-service
+          image: sergbelom/preptask:latest
+          ports:
+          - name: http
+            containerPort: 8080
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: postgres-database
+    labels:
+      app: postgres-database
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: postgres-database
+    template:
+      metadata:
+        labels:
+          app: postgres-database
+      spec:
+        containers:
+        - name: postgres-database
+          image: postgis/postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: preptask-service
+    labels:
+      app: preptask-service
+  spec:
+    selector:
+      app: preptask-service
+    ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: postgres-database
+    labels:
+      app: postgres-database
+  spec:
+    selector:
+      app: postgres-database
+    ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
