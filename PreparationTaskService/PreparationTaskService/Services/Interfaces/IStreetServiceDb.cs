@@ -33,7 +33,7 @@ namespace PreparationTaskService.Services.Interfaces
         Task<bool> DeleteStreetAsync(StreetEntity streetEntity);
 
         /// <summary>
-        /// 
+        /// Add New Point (Thread safe inside)
         /// </summary>
         /// <param name="street"></param>
         /// <param name="newStreetPoint"></param>
@@ -41,7 +41,7 @@ namespace PreparationTaskService.Services.Interfaces
         Task<bool> AddNewPointAsync(int streetId, Coordinate[] newPoints);
 
         /// <summary>
-        /// 
+        /// Add New Point via  Sql Script
         /// </summary>
         /// <param name="streetId"></param>
         /// <param name="newPoint"></param>
