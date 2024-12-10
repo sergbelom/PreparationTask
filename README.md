@@ -12,7 +12,7 @@ Adding a point is implemented algorithmically on the backend and using PostGIS.
 
 **Technologies:**
 - .NET 9
-- PostgreSQL 17.2 (PostGIS  extention)
+- PostgreSQL 17.2 (PostGIS  extention) and pgAdmin 4
 - EntityFrameworkCore 9.0
 - Npgsql.EntityFrameworkCore.PostgreSQL 9.0.1
 - AutoMapper
