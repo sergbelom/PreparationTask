@@ -83,13 +83,9 @@ namespace PreparationTaskService.Services
             bool result = false;
             using (var dbContext = await _dbFactory.CreateDbContextAsync())
             {
-                var street = dbContext.StreetsDbSet.FirstOrDefaultAsync(s => s.Id == streetId).Result;
-                if (street != null)
-                {
-                    street.Geometry = new LineString(newPoints);
-                    await dbContext.SaveChangesAsync();
-                    result = true;
-                }
+                dbContext.AddNewPointThreadSafe(streetId, newPoints);
+                await dbContext.SaveChangesAsync();
+                result = true;
             }
             return result;
         }
@@ -106,10 +102,10 @@ namespace PreparationTaskService.Services
             var sqlQuery = @"
                         UPDATE preptask.""STREETS""
                         SET ""Geometry"" = CASE
-                            WHEN ST_Distance(ST_StartPoint(""Geometry""), ST_MakePoint(@xcoord, @ycoord)) <
-                                 ST_Distance(ST_EndPoint(""Geometry""), ST_MakePoint(@xcoord, @ycoord))
-                            THEN ST_AddPoint(""Geometry"", ST_MakePoint(@xcoord, @ycoord), 0)
-                            ELSE ST_AddPoint(""Geometry"", ST_MakePoint(@xcoord, @ycoord))
+                            WHEN ST_Distance(ST_StartPoint(""Geometry""), ST_SetSRID(ST_MakePoint(@xcoord, @ycoord), 4326)) <
+                                 ST_Distance(ST_EndPoint(""Geometry""), ST_SetSRID(ST_MakePoint(@xcoord, @ycoord), 4326))
+                            THEN ST_AddPoint(""Geometry"", ST_SetSRID(ST_MakePoint(@xcoord, @ycoord), 4326), 0)
+                            ELSE ST_AddPoint(""Geometry"", ST_SetSRID(ST_MakePoint(@xcoord, @ycoord), 4326))
                         END
                         WHERE ""Id"" = @streetId";
 
